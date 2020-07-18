@@ -12,7 +12,9 @@
 ## Creating a new user creates a Mongo database (FeastFreedom) and a new collection (users)
 ### How to create a new user in Postman?
 
- 1. Pass the fields in *x-www-from-urlencoded* body<br>
- 2. send http POST request to: http://localhost:2000/api/auth/signup
+ 1. Start MongoDB with 'mongod' command<br>
+ 2. Start API with 'npm start' command<br>
+ 3. Pass the fields in *x-www-from-urlencoded* body in Postman<br>
+ 4. send http POST request to: http://localhost:2000/api/auth/signup
 <br>
 You may configure the LocalHost Port by changing the value for 'PORT' in .env file<br>
