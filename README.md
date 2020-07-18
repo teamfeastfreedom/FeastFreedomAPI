@@ -3,6 +3,7 @@
 <b>run these installs to get all required dependencies</b><br>
 
  * npm install body-parser --save
+ * npm install nodemon
  * npm install dotenv --save
  * npm install express --save
  * npm install fs --save
