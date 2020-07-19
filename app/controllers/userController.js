@@ -1,5 +1,5 @@
 const bodyParser = require('body-parser');
-const User = require('../models/user/index.js');
+const UserModel = require('../models/user/index.js');
 
 /**
  * Collect all the information from all users
@@ -9,7 +9,7 @@ const User = require('../models/user/index.js');
  */
 const getUser = (req, res) => {
     console.log("INSIDE GETUSER")
-    User.find({})
+    UserModel.find({})
     .then(users => {
         res.send(users);
     }).catch(err => {

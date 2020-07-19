@@ -39,7 +39,7 @@ const signupUser = (req, res) => {
         } else if(error.code == 11000) {
             console.log(error);
             return res.status(422).json ({
-                message: `${Email} is already registered.`,
+                message: `${Email} is already a registered user.`,
                 errors: error.errors
             })
         }

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('email-validator');
 const Kitchen = require('../../controllers/kitchenController');
 
 const ValidateEmail = (value) => {
