@@ -16,11 +16,6 @@ const EmailUnique = async (value) => { //uhhh unique email works, but not here..
 }
 
 module.exports = new mongoose.Schema({
-    // _id: {
-    //     type: Number,
-    //     required: [true, 'ID is required.'],
-    //     unique: [true, 'ID must be unique.']
-    // },
     UserName: {
         type: String,
         required: [true, 'Please enter a UserName.'],
