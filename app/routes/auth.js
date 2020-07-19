@@ -1,4 +1,4 @@
-const authController = require('../controllers/auth');
+const authController = require('../controllers/authController');
 // const user = require('../controllers/user');
 
 // This is the middle man between server and controller

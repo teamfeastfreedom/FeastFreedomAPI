@@ -1,4 +1,4 @@
-const User = require('../models/user/');
+const User = require('../models/user/index.js');
 
 /**
  * Register a new user, and save into database

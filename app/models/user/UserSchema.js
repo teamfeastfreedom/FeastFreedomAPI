@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('email-validator');
-const users = require('../../controllers/user');
+const User = require('../../controllers/userController');
 
 const ValidateEmail = (value) => {
     return validator.validate(value);
@@ -8,9 +8,11 @@ const ValidateEmail = (value) => {
 
 const EmailUnique = async (value) => { //uhhh unique email works, but not here...
     console.log("inside unique email")
-    const count = await mongoose.model('users').countDocuments({ email: value});
+    console.log("looking for " + value);
+    //const count = await mongoose.model('users').countDocuments({ email: value});
+    let count = await mongoose.model('users').countDocuments({ email: value });
     console.log(`Found ${count} emails with value: ${value}`);
-    return count === 0;
+    return true;
 }
 
 module.exports = new mongoose.Schema({
