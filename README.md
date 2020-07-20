@@ -19,3 +19,24 @@
  4. send http POST request to: http://localhost:2000/api/auth/signup
 <br>
 You may configure the LocalHost Port by changing the value for 'PORT' in .env file<br>
+
+## Database Models 
+### 'users' collection
+
+ * UserName
+ * Email
+ * Password
+ * Question1
+ * Answer1
+ * Question2
+ * Answer2
+
+### 'kitchens'
+
+ * KitchenName
+ * Email
+ * Password
+ * KitchenType
+ * OpenTime
+ * CloseTime
+ * ImagePath
