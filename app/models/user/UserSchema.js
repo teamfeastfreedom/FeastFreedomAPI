@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('email-validator');
-const User = require('../../controllers/userController');
+const User = require('../../controllers/authController');
 
 const ValidateEmail = (value) => {
     return validator.validate(value);
