@@ -11,4 +11,7 @@ module.exports = (app) => {
         .put(userController.putUser)
         .get(userController.getUserByID)
         .delete(userController.deleteUser)
+
+    app.route('/api/users/email/:email') //url
+        .get(userController.getUserByEmail)
 };
