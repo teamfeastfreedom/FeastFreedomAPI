@@ -22,7 +22,7 @@ const signupUser = (req, res) => {
     const Answer1 = req.body.Answer1;
     const Question2 = req.body.Question2;
     const Answer2 = req.body.Answer2;
-    console.log("Hello what is password?: " + Password)
+
     User.create({
         //_id,
         UserName,
