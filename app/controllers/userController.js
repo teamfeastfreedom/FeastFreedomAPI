@@ -77,71 +77,37 @@ const postUser = (req, res) => {
  * @param {object} res  This is the response object
  */
 const putUser = (req, res) => {
-    console.log("Inside putUser")
-    UserModel.findById(req.params.id)
+    if(!req.body) {
+        return res.status(400).send({
+            message: "User content can not be empty"
+        });
+    }
+
+    // Find user and update it with the request body
+    UserModel.findByIdAndUpdate(req.params.id, {
+        $set: req.body
+    }, {new: true, useFindAndModify: false})
     .then(user => {
         if(!user) {
             return res.status(404).send({
-                message: "User not found with id = " + req.params.id
+                message: "User not found with id " + req.params.id
             });
         }
-        let UserName = user.UserName;
-        let Email = user.Email;
-        let Password = user.Password;
-        let Question1 = user.Question1;
-        let Answer1 = user.Answer1;
-        let Question2 = user.Question2;
-        let Answer2 = user.Answer2;
 
-        if(req.body.UserName != null) { UserName = req.body.UserName; }
-        if(req.body.Email != null) { Email = req.body.Email; }
-        if(req.body.Password != null) { Password = req.body.Password; }
-        if(req.body.Question1 != null) { Question1 = req.body.Question1; }
-        if(req.body.Question2 != null) { Question2 = req.body.Question2; }
-        if(req.body.Answer1 != null) { Answer1 = req.body.Answer1; }
-        if(req.body.Answer2 != null) { Answer2 = req.body.Answer2; }
-
-        UserModel.updateOne( {_id: req.params.id}, {$set: {
-                UserName,
-                Email,
-                Password,
-                Question1,
-                Answer1,
-                Question2,
-                Answer2
-            }},
-            function(err, res) {
-                if (err) { throw err; }
-                console.log("1 document updated");
-        }).then(user => {
-            return res.json({
-                message: "finished updating!!!!!!", user
-            })
-        }).catch( err => {
-            if(err.code == 11000) {
-                return res.status(422).send({
-                    message: '${Email} is already a registered user.',
-                    errors: error.errors
-                });  
-            } else {
-                console.log(err)
-                return res.status(500).send({
-                    message: 'There was an unexpected error during signup.'
-                })
-            }
-        })
+        res.send(user);
     }).catch(err => {
+        console.log(err)
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "User not found with id = " + req.params.id
+                message: "User not found with id " + req.params.id
             });                
         }
         return res.status(500).send({
-            message: "Error retrieving user with id = " + req.params.id
+            message: "Error updating user with id " + req.params.id + 
+                '/n email is already registered'
         });
     });
-    console.log("Heloooooooooooooooooooooo")
-};
+}
 
 /** DONE
  * Collect a single users information by passing _id
@@ -206,10 +172,27 @@ const getUserByEmail = (req, res) => {
  * @param {object} res  This is the response object
  */
 const deleteUser = (req, res) => {
-    return res.json({ 
-        message: "Not implemented yet"
+    UserModel.findOneAndRemove({_id: req.params.id}, {rawResult:true})
+    .then(user => {
+        if(!user.value) {
+            return res.status(404).send({
+                message: "User not found with id " + req.params.id
+            });
+        }
+        res.send({
+            message: "User deleted successfully!", user
+        });
+    }).catch(err => {
+        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+            return res.status(404).send({
+                message: "User not found with id " + req.params.id
+            });                
+        }
+        return res.status(500).send({
+            message: "Could not delete user with id " + req.params.id
+        });
     });
-};
+}
 
 module.exports = {
     getUser,
