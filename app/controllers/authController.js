@@ -86,20 +86,27 @@ const authorizeUser = (req, res) => {
     User.findOne({Email: req.body.Email})
     .then(user => {
         if(!user) {
-            return res.status(404).send({
-                message: "User not found with id = " + req.params.email
+            return res.status(400).send({
+                message: "Username or password is incorrect."
             });            
+        }
+        if(user.Password != req.body.Password) {
+            return res.status(400).send({
+                message: "Username or password is incorrect."
+            });
         }
         const token = jwt.sign({id: user._id}, process.env.SECRET, {
             expiresIn: 3600 //expires after 1 hour
         });
         //return res.status(200).send({ auth: true, token: token });
+        var date = new Date();
+        date.setHours( date.getHours() + 1 );
         return res.status(200).send({
-            message: 'You have now signed up.', 
+            message: 'You have been authorized!', 
             user: user,
             auth: true,
             token: token,
-            date: Date()
+            expires: date
         })
     }).catch(err => {
         if(err.kind === 'ObjectId') {
