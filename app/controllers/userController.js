@@ -8,7 +8,6 @@ const UserModel = require('../models/user/index.js');
  * @param {object} res  This is the response object
  */
 const getUser = (req, res) => {
-    console.log("INSIDE GETUSER")
     UserModel.find({})
     .then(users => {
         res.send(users);
