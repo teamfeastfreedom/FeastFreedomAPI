@@ -18,6 +18,7 @@ const EmailUnique = async (value) => { //uhhh unique email works, but not here..
 module.exports = new mongoose.Schema({
     KitchenName: {
         type: String,
+        unique: true,
         required: [true, 'Please enter a UserName.'],
         minlength: [5, 'UserName must have at least 5 characters.'],
         maxlength: [30, 'UserName connot have over 30 characters.']
@@ -53,4 +54,5 @@ module.exports = new mongoose.Schema({
     ImagePath: {
         type: String,
     }
+    
 });
