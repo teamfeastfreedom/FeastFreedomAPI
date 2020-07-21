@@ -9,4 +9,7 @@ module.exports = (app) => {
         .put(kitchenController.putKitchen)
         .get(kitchenController.getKitchenByID)
         .delete(kitchenController.deleteKitchen)
+
+    app.route('/api/kitchens/email/:email') //url
+        .get(kitchenController.getKitchenByEmail)
 };

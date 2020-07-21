@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser');
 const KitchenModel = require('../models/kitchen/index.js');
+const kitchen = require('../models/kitchen/index.js');
 
 
 /**
@@ -79,20 +80,92 @@ const postKitchen = (req, res) => {
  * @param {object} res  This is the response object
  */
 const putKitchen = (req, res) => {
-    return res.json({ 
-        message: "Not implemented yet"
+    if(!req.body) {
+        return res.status(400).send({
+            message: "Kitchen content can not be empty"
+        });
+    }
+     // Find kitchen and update it with the request body
+    KitchenModel.findByIdAndUpdate(req.params.id, {
+        $set: req.body
+    }, {new: true, useFindAndModify: false})
+    .then(kitchen => {
+        if(!kitchen) {
+            return res.status(404).send({
+                message: "Kitchen not found with id " + req.params.id
+            });
+        }
+
+        res.send(kitchen);
+    }).catch(err => {
+        console.log(err)
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "Kitchen not found with id " + req.params.id
+            });                
+        }
+        return res.status(500).send({
+            message: "Error updating user with id " + req.params.id + 
+                '/n email is already registered'
+        });
     });
 };
+  
+
 
 /**
  * Collect the kitchens information
  * 
+ * @param {object} id   This is passed in the url and signifies the user to query
  * @param {object} req  This is the request object
  * @param {object} res  This is the response object
  */
 const getKitchenByID = (req, res) => {
-    return res.json({ 
-        message: "Not implemented yet"
+    KitchenModel.findById(req.params.id)
+    .then(kitchen => {
+        if(!kitchen) {
+            return res.status(404).send({
+                message: "Kitchen not found with id = " + req.params.id
+            });            
+        }
+        res.send(kitchen);
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "Kitchen not found with id = " + req.params.id
+            });                
+        }
+        return res.status(500).send({
+            message: "Error retrieving user with id = " + req.params.id
+        });
+    });
+};
+
+/** DONE
+ * Collect a single users information by passing email
+ * 
+ * @param {object} email    This is passed in the url and signifies  the user to query
+ * @param {object} req      This is the request object
+ * @param {object} res      This is the response object
+ */
+const getKitchenByEmail = (req, res) => {
+    KitchenModel.findOne({Email: req.params.email})
+    .then(kitchen => {
+        if(!kitchen) {
+            return res.status(404).send({
+                message: "User not found with id = " + req.params.email
+            });            
+        }
+        res.send(kitchen);
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "User not found with id = " + req.params.email
+            });                
+        }
+        return res.status(500).send({
+            message: "Error retrieving user with id = " + req.params.email
+        });
     });
 };
 
@@ -103,8 +176,25 @@ const getKitchenByID = (req, res) => {
  * @param {object} res  This is the response object
  */
 const deleteKitchen = (req, res) => {
-    return res.json({ 
-        message: "Not implemented yet"
+    KitchenModel.findOneAndRemove({_id: req.params.id}, {rawResult:true})
+    .then(kitchen => {
+        if(!kitchen.value) {
+            return res.status(404).send({
+                message: "Kitchen not found with id " + req.params.id
+            });
+        }
+        res.send({
+            message: "Kitchen deleted successfully!", user
+        });
+    }).catch(err => {
+        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+            return res.status(404).send({
+                message: "Kitchen not found with id " + req.params.id
+            });                
+        }
+        return res.status(500).send({
+            message: "Could not delete Kitchen with id " + req.params.id
+        });
     });
 };
 
@@ -113,5 +203,6 @@ module.exports = {
     postKitchen,
     putKitchen,
     getKitchenByID,
+    getKitchenByEmail,
     deleteKitchen
 };
