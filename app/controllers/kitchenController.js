@@ -1,6 +1,10 @@
 const bodyParser = require('body-parser');
 const KitchenModel = require('../models/kitchen/index.js');
-const kitchen = require('../models/kitchen/index.js');
+const express = require('express');
+const router = express.Router();
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
+const jwt = require('jsonwebtoken');
 
 
 /**
@@ -184,7 +188,7 @@ const deleteKitchen = (req, res) => {
             });
         }
         res.send({
-            message: "Kitchen deleted successfully!", user
+            message: "Kitchen deleted successfully!", kitchen
         });
     }).catch(err => {
         if(err.kind === 'ObjectId' || err.name === 'NotFound') {
@@ -198,11 +202,61 @@ const deleteKitchen = (req, res) => {
     });
 };
 
+const authenticateToken = (req, res) => {
+    var token = req.headers['x-access-token'];
+    if (!token) { //if token not found
+        return res.status(401).send({ auth: false, message: 'No token provided.' });
+    }
+    
+    jwt.verify(token, process.env.SECRET, function(err, decoded) {
+    if (err) {
+        return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+    }
+    
+    res.status(200).send(decoded);
+  });
+};
+
+
+const authorizeKitchen = (req, res) => {
+    console.log("Inside Auth Kitchen")
+    KitchenModel.findOne({Email: req.body.Email})
+    .then(kitchen => {
+        if(!kitchen) {
+            return res.status(404).send({
+                message: "User not found with id = " + req.params.email
+            });            
+        }
+        const token = jwt.sign({id: kitchen._id}, process.env.SECRET, {
+            expiresIn: 3600 //expires after 1 hour
+        });
+        //return res.status(200).send({ auth: true, token: token });
+        return res.status(200).send({
+            message: 'You have now signed up.', 
+            kitchen: kitchen,
+            auth: true,
+            token: token,
+            date: Date()
+        })
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "User not found with id = " + req.params.email
+            });                
+        }
+        return res.status(500).send({
+            message: "Error retrieving user with id = " + req.params.email
+        });
+    });
+};
+
 module.exports = {
     getKitchen,
     postKitchen,
     putKitchen,
     getKitchenByID,
     getKitchenByEmail,
-    deleteKitchen
+    deleteKitchen,
+    authenticateToken,
+    authorizeKitchen
 };
