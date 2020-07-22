@@ -273,6 +273,26 @@ const addItem = (req, res) => {
     });
 };
 
+const getItem = (req, res) => {
+    console.log('inside item')
+    ItemModel.create(req.body)
+    .then((item) => {
+      //console.log('createed item?' + item)
+      console.log(req.params.id)
+      KitchenModel.findOne({ _id: req.params.id })
+      .populate("items")
+      .then((kitchen) => {
+        //console.log('somtehing with kitchen' + kitchen);
+        // If we were able to successfully update a Product, send it back to the client
+        res.json(kitchen);
+      })
+    })
+    .catch(function(err) {
+      // If an error occurred, send it to the client
+      res.json(err);
+    });
+};
+
 module.exports = {
     getKitchen,
     postKitchen,
@@ -282,5 +302,6 @@ module.exports = {
     deleteKitchen,
     authenticateToken,
     authorizeKitchen,
-    addItem
+    addItem,
+    getItem
 };

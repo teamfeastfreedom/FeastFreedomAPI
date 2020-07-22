@@ -11,7 +11,7 @@ module.exports = (app) => {
 
     app.route('/api/kitchens/:id') //url
         .put(kitchenController.putKitchen)
-        .get(kitchenController.getKitchenByID)
+        .get(kitchenController.getItem)
         .delete(kitchenController.deleteKitchen)
         .post(kitchenController.addItem)
 
