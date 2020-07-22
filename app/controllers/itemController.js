@@ -25,24 +25,22 @@ const getItem = (req, res) => {
  * @param {object} res  This is the response object
  */
 const postItem = (req, res) => {
-    console.log("inside post item")
     const ItemName = req.body.ItemName;
-    const KitchenID = req.params.id;
+    const KitchenName = req.body.KitchenName;
     const Price = req.body.Price;
     const ItemCatagory = req.body.ItemCatagory;
     const ImagePath = req.body.ImagePath;
 
-    console.log("Beginning")
     ItemModel.create({
         ItemName,
-        KitchenID,
+        KitchenName,
         Price,
         ItemCatagory,
         ImagePath,
     }).then((item) => { // item created successfully
         console.log("inside item create" + item)
         return res.json({
-            message: `You have added a new item(${item.ItemName}) to ${item.KitchenID}'s menu`,
+            message: `You have added a new item(${item.ItemName}) to ${item.KitchenName}'s menu`,
             item
         })
     }).catch((error) => { // item not created and throw indicating error
@@ -75,10 +73,11 @@ const putItem = (req, res) => {
     }
 
     // Find item and update it with the request body
-    ItemModel.findByIdAndUpdate(req.params.id, {
+    ItemModel.findByIdAndUpdate({_id:req.params.id}, {
         $set: req.body
     }, {new: true, useFindAndModify: false})
     .then(item => {
+        console.log(item)
         if(!item) {
             return res.status(404).send({
                 message: "Item not found with id " + req.params.id
@@ -135,15 +134,17 @@ const getItemByID = (req, res) => {
  * @param {object} res      This is the response object
  */
 const getItemByEmail = (req, res) => {
+    console.log("asdf")
     ItemModel.find({KitchenEmail: req.params.email})
     .then(items => {
+        console.log(items)
         if(!items) {
             return res.status(404).send({
                 message: "Item not found with email = " + req.params.email
             });            
         }
-        res.status(200).send({
-            message: `These are the items on ${KitchenEmail}'s menu`,
+        res.status(200).send({  
+            message: `These are the items on ${req.params.email}'s menu`,
             items
         });
     }).catch(err => {
@@ -158,7 +159,7 @@ const getItemByEmail = (req, res) => {
     });
 };
 
-/**
+/** DONE
  * Collect the items information
  * 
  * @param {object} req  This is the request object

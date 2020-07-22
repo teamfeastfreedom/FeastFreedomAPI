@@ -1,14 +1,14 @@
 const bodyParser = require('body-parser');
 const KitchenModel = require('../models/kitchen/index.js');
 const ItemModel = require('../models/item/index.js');
-const ItemC = require('./itemController');
+//const ItemC = require('./itemController');
 
 const express = require('express');
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 const jwt = require('jsonwebtoken');
-const itemController = require('./itemController');
+//const itemController = require('./itemController');
 
 
 /**
@@ -255,27 +255,23 @@ const authorizeKitchen = (req, res) => {
 };
 
 const addItem = (req, res) => {
-    KitchenModel.findById(req.params.id)
-    .then(kitchen => {
-        if(!kitchen) {
-            return res.status(404).send({
-                message: "Kitchen not found with id = " + req.params.id
-            });            
-        }
-        ItemC.postItem()
-        console.log("post item")
-        
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
-            return res.status(404).send({
-                message: "Kitchen not found with id = " + req.params.id
-            });                
-        }
-        return res.status(500).send({
-            message: "Error retrieving kitchen with id = " + req.params.id
-        });
+    console.log('inside item')
+    ItemModel.create(req.body)
+    .then((item) => {
+      console.log('createed item?' + item)
+      console.log(req.params.id)
+      KitchenModel.findOneAndUpdate({ _id: req.params.id }, {$push: {items: item}}, { new: true })
+      .then((kitchen) => {
+        console.log('somtehing with kitchen' + kitchen);
+        // If we were able to successfully update a Product, send it back to the client
+        res.json(kitchen);
+      })
+    })
+    .catch(function(err) {
+      // If an error occurred, send it to the client
+      res.json(err);
     });
-}
+};
 
 module.exports = {
     getKitchen,
