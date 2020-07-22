@@ -26,34 +26,31 @@ const getItem = (req, res) => {
  */
 const postItem = (req, res) => {
     const ItemName = req.body.ItemName;
-    const KitchenName = req.body.KitchenName;
     const Price = req.body.Price;
     const ItemCatagory = req.body.ItemCatagory;
     const ImagePath = req.body.ImagePath;
 
     ItemModel.create({
         ItemName,
-        KitchenName,
         Price,
         ItemCatagory,
         ImagePath,
     }).then((item) => { // item created successfully
-        console.log("inside item create" + item)
         return res.json({
-            message: `You have added a new item(${item.ItemName}) to ${item.KitchenName}'s menu`,
+            message: `You have added a new item(${item.ItemName}) to no menu`,
             item
         })
     }).catch((error) => { // item not created and throw indicating error
         if(error.name === 'ValidationError') {
             console.log('Hit error in ValidationError.')
             return res.status(422).json({
-                message: 'There was an issue with your signup request',
+                message: 'There was an issue with your create request',
                 errors: error.errors
             })
         }else {
             console.log(error);
             return res.status(500).json({
-                message: 'There was an unexpected error during signup.'
+                message: 'There was an unexpected error during post'
             })
         }
     });
@@ -133,31 +130,31 @@ const getItemByID = (req, res) => {
  * @param {object} req      This is the request object
  * @param {object} res      This is the response object
  */
-const getItemByEmail = (req, res) => {
-    console.log("asdf")
-    ItemModel.find({KitchenEmail: req.params.email})
-    .then(items => {
-        console.log(items)
-        if(!items) {
-            return res.status(404).send({
-                message: "Item not found with email = " + req.params.email
-            });            
-        }
-        res.status(200).send({  
-            message: `These are the items on ${req.params.email}'s menu`,
-            items
-        });
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
-            return res.status(404).send({
-                message: "Item not found with email = " + req.params.email
-            });                
-        }
-        return res.status(500).send({
-            message: "Error retrieving item with email = " + req.params.email
-        });
-    });
-};
+// const getItemByEmail = (req, res) => {
+//     console.log("asdf")
+//     ItemModel.find({KitchenEmail: req.params.email})
+//     .then(items => {
+//         console.log(items)
+//         if(!items) {
+//             return res.status(404).send({
+//                 message: "Item not found with email = " + req.params.email
+//             });            
+//         }
+//         res.status(200).send({  
+//             message: `These are the items on ${req.params.email}'s menu`,
+//             items
+//         });
+//     }).catch(err => {
+//         if(err.kind === 'ObjectId') {
+//             return res.status(404).send({
+//                 message: "Item not found with email = " + req.params.email
+//             });                
+//         }
+//         return res.status(500).send({
+//             message: "Error retrieving item with email = " + req.params.email
+//         });
+//     });
+// };
 
 /** DONE
  * Collect the items information
@@ -194,5 +191,5 @@ module.exports = {
     putItem,
     getItemByID,
     deleteItem,
-    getItemByEmail
+    //getItemByEmail
 };

@@ -11,6 +11,6 @@ module.exports = (app) => {
         .delete(itemController.deleteItem)
         .post(itemController.postItem)
 
-    app.route('/api/items/email/:email') //url
-        .get(itemController.getItemByEmail)
+    // app.route('/api/items/email/:email') //url
+    //     .get(itemController.getItemByEmail)
 };
