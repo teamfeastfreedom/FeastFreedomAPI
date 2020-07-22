@@ -25,21 +25,24 @@ const getItem = (req, res) => {
  * @param {object} res  This is the response object
  */
 const postItem = (req, res) => {
+    console.log("inside post item")
     const ItemName = req.body.ItemName;
-    const KitchenEmail = req.body.KitchenEmail;
+    const KitchenID = req.params.id;
     const Price = req.body.Price;
     const ItemCatagory = req.body.ItemCatagory;
     const ImagePath = req.body.ImagePath;
 
+    console.log("Beginning")
     ItemModel.create({
         ItemName,
-        KitchenEmail,
+        KitchenID,
         Price,
         ItemCatagory,
         ImagePath,
     }).then((item) => { // item created successfully
+        console.log("inside item create" + item)
         return res.json({
-            message: `You have added a new item(${item.ItemName}) to ${item.KitchenEmail}'s menu`,
+            message: `You have added a new item(${item.ItemName}) to ${item.KitchenID}'s menu`,
             item
         })
     }).catch((error) => { // item not created and throw indicating error

@@ -9,6 +9,7 @@ module.exports = (app) => {
         .put(itemController.putItem)
         .get(itemController.getItemByID)
         .delete(itemController.deleteItem)
+        .post(itemController.postItem)
 
     app.route('/api/items/email/:email') //url
         .get(itemController.getItemByEmail)

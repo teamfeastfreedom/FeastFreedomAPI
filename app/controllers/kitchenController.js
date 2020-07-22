@@ -1,10 +1,14 @@
 const bodyParser = require('body-parser');
 const KitchenModel = require('../models/kitchen/index.js');
+const ItemModel = require('../models/item/index.js');
+const ItemC = require('./itemController');
+
 const express = require('express');
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 const jwt = require('jsonwebtoken');
+const itemController = require('./itemController');
 
 
 /**
@@ -250,6 +254,29 @@ const authorizeKitchen = (req, res) => {
     });
 };
 
+const addItem = (req, res) => {
+    KitchenModel.findById(req.params.id)
+    .then(kitchen => {
+        if(!kitchen) {
+            return res.status(404).send({
+                message: "Kitchen not found with id = " + req.params.id
+            });            
+        }
+        ItemC.postItem()
+        console.log("post item")
+        
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "Kitchen not found with id = " + req.params.id
+            });                
+        }
+        return res.status(500).send({
+            message: "Error retrieving kitchen with id = " + req.params.id
+        });
+    });
+}
+
 module.exports = {
     getKitchen,
     postKitchen,
@@ -258,5 +285,6 @@ module.exports = {
     getKitchenByEmail,
     deleteKitchen,
     authenticateToken,
-    authorizeKitchen
+    authorizeKitchen,
+    addItem
 };

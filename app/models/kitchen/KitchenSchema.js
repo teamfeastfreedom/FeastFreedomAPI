@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const validator = require('email-validator');
-const Kitchen = require('../../controllers/kitchenController');
+//const Kitchen = require('../../controllers/kitchenController');
+//const item = require('../item/itemSchema');
+//const { schema } = require('../item');
+const items = require('../item/index.js');
 
 const ValidateEmail = (value) => {
     return validator.validate(value);
@@ -53,6 +56,9 @@ module.exports = new mongoose.Schema({
     },
     ImagePath: {
         type: String,
-    }
-    
+    },
+    items: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'items'
+    }]
 });
