@@ -83,8 +83,10 @@ const authenticateToken = (req, res) => {
 
 
 const authorizeUser = (req, res) => {
+    console.log('Email: ' + req.body.Email)
     User.findOne({Email: req.body.Email})
     .then(user => {
+        console.log(user)
         if(!user) {
             return res.status(400).send({
                 message: "Username or password is incorrect."
@@ -101,6 +103,7 @@ const authorizeUser = (req, res) => {
         //return res.status(200).send({ auth: true, token: token });
         var date = new Date();
         date.setHours( date.getHours() + 1 );
+
         return res.status(200).send({
             message: 'You have been authorized!', 
             user: user,

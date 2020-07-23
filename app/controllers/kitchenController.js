@@ -225,24 +225,26 @@ const authenticateToken = (req, res) => {
 const authorizeKitchen = (req, res) => {
     console.log("Inside Auth Kitchen")
     KitchenModel.findOne({Email: req.body.Email})
-    .then(kitchen => {
-        if(!kitchen) {
+    .then(user => {
+        if(!user) {
             return res.status(404).send({
                 message: "User not found with id = " + req.params.email
             });            
         }
-        const token = jwt.sign({id: kitchen._id}, process.env.SECRET, {
+        console.log(user)
+        const token = jwt.sign({id: user._id}, process.env.SECRET, {
             expiresIn: 3600 //expires after 1 hour
         });
         //return res.status(200).send({ auth: true, token: token });
         return res.status(200).send({
             message: 'You have now signed up.', 
-            kitchen: kitchen,
+            user: user,
             auth: true,
             token: token,
             date: Date()
         })
     }).catch(err => {
+        console.log('hit error in authkitchen')
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
                 message: "User not found with id = " + req.params.email

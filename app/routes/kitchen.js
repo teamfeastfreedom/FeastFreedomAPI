@@ -6,7 +6,7 @@ module.exports = (app) => {
         .post(kitchenController.postKitchen)
 
     
-    app.get('/api/kitchens/authorize', kitchenController.authorizeKitchen)
+    app.post('/api/kitchens/authorize', kitchenController.authorizeKitchen)
     app.get('/api/kitchens/authenticate', kitchenController.authenticateToken)
 
     app.route('/api/kitchens/:id') //url
