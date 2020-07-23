@@ -16,5 +16,9 @@ module.exports = new mongoose.Schema({
     ImagePath: {
         type: String,
         required: [true, 'Please enter an image of this item.'],
+    },
+    ItemDescription: {
+        type:String,
+        required: [true, 'Please enter a description of this item.']
     }
 });
