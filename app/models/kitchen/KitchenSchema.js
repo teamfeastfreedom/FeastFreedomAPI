@@ -43,7 +43,7 @@ module.exports = new mongoose.Schema({
         maxlength: [30, 'Password connot have over 30 characters.'],
     },
     KitchenType: {
-        type: Number,
+        type: String,
     },
     WorkingDays: {
         type: String,
