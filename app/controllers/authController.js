@@ -89,12 +89,12 @@ const authorizeUser = (req, res) => {
         console.log(user)
         if(!user) {
             return res.status(400).send({
-                message: "Username or password is incorrect."
+                message: "Email or password is incorrect."
             });            
         }
         if(user.Password != req.body.Password) {
             return res.status(400).send({
-                message: "Username or password is incorrect."
+                message: "Email or password is incorrect."
             });
         }
         const token = jwt.sign({id: user._id}, process.env.SECRET, {

@@ -228,8 +228,13 @@ const authorizeKitchen = (req, res) => {
     .then(user => {
         if(!user) {
             return res.status(404).send({
-                message: "User not found with id = " + req.params.email
+                message: "User not found with email = " + req.params.email
             });            
+        }
+        if(user.Password != req.body.Password) {
+            return res.status(400).send({
+                message: "Email or password is incorrect."
+            });
         }
         console.log(user)
         const token = jwt.sign({id: user._id}, process.env.SECRET, {
@@ -237,7 +242,7 @@ const authorizeKitchen = (req, res) => {
         });
         //return res.status(200).send({ auth: true, token: token });
         return res.status(200).send({
-            message: 'You have now signed up.', 
+            message: 'You have been authorized', 
             user: user,
             auth: true,
             token: token,
@@ -273,7 +278,7 @@ const addItem = (req, res) => {
       // If an error occurred, send it to the client
       res.json(err);
     });
-};
+}
 
 const getItem = (req, res) => {
     console.log('inside item')
