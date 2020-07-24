@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Cart = require('../../controllers/cartController');
+//const Cart = require('../../controllers/cartController');
 const itemSchema = require('../item/itemSchema');
 
 module.exports = new mongoose.Schema({

@@ -228,8 +228,13 @@ const authorizeKitchen = (req, res) => {
     .then(user => {
         if(!user) {
             return res.status(404).send({
-                message: "User not found with id = " + req.params.email
+                message: "User not found with email = " + req.params.email
             });            
+        }
+        if(user.Password != req.body.Password) {
+            return res.status(400).send({
+                message: "Email or password is incorrect."
+            });
         }
         console.log(user)
         const token = jwt.sign({id: user._id}, process.env.SECRET, {
@@ -237,7 +242,7 @@ const authorizeKitchen = (req, res) => {
         });
         //return res.status(200).send({ auth: true, token: token });
         return res.status(200).send({
-            message: 'You have now signed up.', 
+            message: 'You have been authorized', 
             user: user,
             auth: true,
             token: token,
@@ -256,24 +261,48 @@ const authorizeKitchen = (req, res) => {
     });
 };
 
-const addItem = (req, res) => {
-    console.log('inside item')
-    ItemModel.create(req.body)
+const addItem = async (req, res) => {
+    if(!req.body.ItemName) {
+        res.status(400).send({
+            message: "Please enter an ItemName."
+        });
+    }
+    await ItemModel.create(req.body)
     .then((item) => {
       console.log('createed item?' + item)
       console.log(req.params.id)
-      KitchenModel.findOneAndUpdate({ _id: req.params.id }, {$push: {items: item}}, { new: true })
-      .then((kitchen) => {
-        console.log('somtehing with kitchen' + kitchen);
-        // If we were able to successfully update a Product, send it back to the client
-        res.json(kitchen);
-      })
+    //   let isUnique = await (testMenu(item.ItemName, req.params.id))
+    //   if(!isUnique) {
+    //       console.log('deleteing item')
+    //       (ItemModel.deleteOne({_id: item._id}))
+    //   }
+      //else {
+          //console.log('not deleting')
+        KitchenModel.findOneAndUpdate({ _id: req.params.id }, {$push: {items: item}}, { new: true })
+        .then((kitchen) => {
+          // If we were able to successfully update a Product, send it back to the client
+          res.json(kitchen);
+        })
+      //}
     })
     .catch(function(err) {
       // If an error occurred, send it to the client
       res.json(err);
     });
-};
+}
+
+async function testMenu(itemName, kitchenid) {
+    console.log('inside testMenu')
+    await KitchenModel.findOne({_id: kitchenid})
+    .then((kitchen) => {
+        kitchen.items.forEach((item) => {
+            if(item.itemName == itemName) {
+                return false;
+            }
+        })
+        return true;
+    })
+}
 
 const getItem = (req, res) => {
     console.log('inside item')

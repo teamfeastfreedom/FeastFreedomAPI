@@ -26,15 +26,17 @@ const getItem = (req, res) => {
  */
 const postItem = (req, res) => {
     const ItemName = req.body.ItemName;
-    const Price = req.body.Price;
     const ItemCatagory = req.body.ItemCatagory;
+    const Price = req.body.Price;
     const ImagePath = req.body.ImagePath;
+    const ItemDescription = req.body.ItemDescription;
 
     ItemModel.create({
         ItemName,
         Price,
         ItemCatagory,
         ImagePath,
+        ItemDescription
     }).then((item) => { // item created successfully
         return res.json({
             message: `You have added a new item(${item.ItemName}) to no menu`,
