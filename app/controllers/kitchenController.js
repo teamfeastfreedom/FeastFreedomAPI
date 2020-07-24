@@ -68,7 +68,7 @@ const postKitchen = (req, res) => {
         } else if(error.code == 11000) {
             console.log(error);
             return res.status(422).json ({
-                message: `${Email} is already a registered kitchen.`,
+                message: `That Email or Name is already a registered kitchen.`,
                 errors: error.errors
             })
         }
@@ -305,23 +305,24 @@ async function testMenu(itemName, kitchenid) {
 }
 
 const getItem = (req, res) => {
-    console.log('inside item')
-    ItemModel.create(req.body)
-    .then((item) => {
-      //console.log('createed item?' + item)
-      console.log(req.params.id)
-      KitchenModel.findOne({ _id: req.params.id })
+    KitchenModel.findOne({ _id: req.params.id })
       .populate("items")
       .then((kitchen) => {
         //console.log('somtehing with kitchen' + kitchen);
         // If we were able to successfully update a Product, send it back to the client
         res.json(kitchen);
       })
-    })
-    .catch(function(err) {
-      // If an error occurred, send it to the client
-      res.json(err);
-    });
+    // console.log('inside item')
+    // ItemModel.create(req.body)
+    // .then((item) => {
+    //   //console.log('createed item?' + item)
+    //   console.log(req.params.id)
+    //   //added HEReEEEEEE
+    // })
+    // .catch(function(err) {
+    //   // If an error occurred, send it to the client
+    //   res.json(err);
+    // });
 };
 
 module.exports = {
