@@ -1,14 +1,40 @@
 const bodyParser = require('body-parser');
 const KitchenModel = require('../models/kitchen/index.js');
 const ItemModel = require('../models/item/index.js');
-//const ItemC = require('./itemController');
+const multer = require('multer');
+
 
 const express = require('express');
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 const jwt = require('jsonwebtoken');
-//const itemController = require('./itemController');
+
+const storage = multer.diskStorage({
+    destination: (req, file, callBack) => {
+        callBack(null, 'uploads')
+    },
+    filename: (req, file, callBack) => {
+        callBack(null, `FunOfHeuristic_${file.originalname}`)
+    }
+  })
+  
+const upload = multer({ storage: storage })
+
+//app.post('/api/upload', upload.single('file'), (req, res, next) => {
+const uploadFile = (req, res, next) => {
+    //upload.single('file')
+    console.log('HELLO FROM UPLOAD')
+    const file = req.body.file;
+    if (!file) {
+      console.log('no file')
+      const error = new Error('No File')
+      error.httpStatusCode = 400
+      return next(error)
+    }
+    console.log('found file: ' + file)
+    res.status(200).send(file);
+}
 
 
 /**
@@ -335,5 +361,6 @@ module.exports = {
     authenticateToken,
     authorizeKitchen,
     addItem,
-    getItem
+    getItem,
+    uploadFile
 };
